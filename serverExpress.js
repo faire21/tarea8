@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 8080;
+const port =  process.env.PORT || 3000;
 const moment = require('moment');
 const fs = require('fs');
 const bodyParser = require('body-parser');
