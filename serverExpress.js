@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port = 80;
+const port = 3000;
 const moment = require('moment');
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -108,10 +108,14 @@ app.route('/producto/:id')
     })
 
 app.route('/usuario/login')
-    .post((req, res) => {
-            let pos = usuarios.find(pr => pr.usuario == req.body.usuario);
+    .post((req, res) => { 
 
-            if (pos != undefined || pos == []) { 
+            let pos = usuarios.find(pr => pr.usuario == req.body.usuario);
+           
+           if (pos==undefined){
+               res.send('Usuario No encontrado',406)
+           } else
+             {  
                 if (pos.password == req.body.password) {
                 
                     var expires = moment().add(5, 'minutes').valueOf();
@@ -122,20 +126,21 @@ app.route('/usuario/login')
                 tokens= { token: token,
                     expires: expires,
                    usuario: pos}
-                res.json({
+               return res.json({
                    tokens
-                })
-                res.sendStatus(200);
+                }).status(200);
             }
-            res.sendStatus(406);
-        }
+            res.status(406);
+             }
     })
 
     app.route('/usuario/logout')
-    .post(auth,(req, res) => {
-          if(tokens.usuario.usuario == req.body.usuario && tokens.usuario.password == req.body.password)
+    .post(auth,(req, res)  => {
+          if(tokens.usuario.usuario == req.body.usuario && tokens.usuario.password == req.body.password){
             tokens= undefined;
-           res.sendStatus(204);
+            return res.sendStatus(204);
+        }
+           res.sendStatus('Error en el usuario/contraseña',406 );
     })
 
     app.route('/token').get((req,res)=>{
