@@ -2,7 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const port =  process.env.PORT || 3000;
+const port = 3000;
 const moment = require('moment');
 const fs = require('fs');
 const bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ app.use(jsonParser);
 app.use(cors(corsOptions));
 app.use(express.static(__dirname + '/public'));
 const log = (req, res, next)=>{
-    console.log(`${req.method} ${req.url} ${new Date()}`);
+    console.log(`${req.method} ${req.url} ${new Date()} ${req.get('content-type')}`);
     next();
 }
 app.use(log);
@@ -112,8 +112,8 @@ app.route('/usuario/login')
 
             let pos = usuarios.find(pr => pr.usuario == req.body.usuario);
            
-           if (pos==undefined){
-               res.send('Usuario No encontrado',406)
+           if (pos==undefined || req.body.password != undefined ){
+               res.send('Error en usuario/contraseña',406)
            } else
              {  
                 if (pos.password == req.body.password) {
@@ -130,7 +130,7 @@ app.route('/usuario/login')
                    tokens
                 }).status(200);
             }
-            res.status(406);
+            res.send('Error en usuario/contraseña',406)
              }
     })
 
