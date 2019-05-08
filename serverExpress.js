@@ -112,7 +112,7 @@ app.route('/usuario/login')
 
             let pos = usuarios.find(pr => pr.usuario == req.body.usuario);
            
-           if (pos==undefined || req.body.password != undefined ){
+           if (pos==undefined || req.body.password == undefined ){
                res.send('Error en usuario/contraseña',406)
            } else
              {  
